@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Dish } from "./Dish";
+import "../App.css";
 
 interface menu {
   id: number;
@@ -18,18 +19,32 @@ interface Props {
 const Categories: React.FC<Props> = ({ menu, categories }) => {
   const [selectedCate, setSelectedCate] = useState("all");
   const changeCategoriHandle = (event: React.MouseEvent<HTMLElement>) => {
-    setSelectedCate(event.currentTarget.innerText);
+    setSelectedCate(event.currentTarget.innerText.toLowerCase());
   };
 
   return (
     <>
-      <ul>
+      <ul className="btn-container">
+        {console.log(selectedCate)}
         {categories.map((category) => (
-          <button className="btn" onClick={changeCategoriHandle} key={category}>
+          <button
+            className="filter-btn"
+            onClick={changeCategoriHandle}
+            key={category}
+          >
             {category}
           </button>
         ))}
       </ul>
+      <section className="section-center">
+        {selectedCate !== "all"
+          ? menu
+              .filter((dish) => dish.category === selectedCate)
+              .map((item) => {
+                return <Dish key={item.id} item={item} />;
+              })
+          : menu.map((item) => <Dish key={item.id} item={item} />)}
+      </section>
     </>
   );
 };
